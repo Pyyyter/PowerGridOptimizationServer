@@ -24,38 +24,18 @@ class OSeMOSYS:
     def datafileToCsv(self, input, output, params, saveLog):
         if saveLog:
             log = "logs/postProcessingLog.txt"
-            os.system("otoole convert datafile csv " + input +" "+ output +" "+ params + " 2> " + log)
+            os.system("otoole convert csv excel " + input +" "+ output +" "+ params + " 2> " + log)
         else:
-            os.system("otoole convert datafile csv " + input +" "+ output +" "+ params)
+            os.system("otoole convert csv excel " + input +" "+ output +" "+ params)
 
     def postProcessing(self, input, output, params, saveLog):
         self.datafileToCsv(input, output, params, saveLog)
         
 
-    def optimize(self, input, model, config, combedData, processedData, script, output, processedOutput, saveLog):
+    def optimize(self, input, model, config, combedData, processedData, script, output, processedModel, processedOutput, saveLog):
         self.inputConverting(input, combedData, config, saveLog)
+        print("Converteu Entrada")
         self.preprocessData(script, combedData, processedData, model, processedModel, saveLog)
+        print("Processou Dados")
         self.glpsolOptimize(processedModel, processedData, output, saveLog)
-        # self.postProcessing(output, processedOutput, config, saveLog)
-
-model = "model_BCNexus.txt"
-processedModel = "processedModel.txt"
-config = "configs/otoole_config.yaml"
-
-initialData = "data/BC"
-combedData = "data.txt"
-# convertLog = "logs/convertLog.txt"
-
-script = "preprocess.py"
-processedData = "processedData.txt"
-# processLog = "logs/dataProcessLog.txt"
-
-output = "results/output.lp"
-# modelLog = "logs/modelResult.txt"
-
-# postProcessingLog = "logs/postProcessingLog.txt"
-
-# OSeMOSYS.inputConverting(initialData, combedData, config, convertLog)
-# OSeMOSYS.preprocessData(script, combedData, processedData, model, processedModel, processLog)
-# OSeMOSYS.glpsolOptimize(processedModel, processedData, output, modelLog)
-# OSeMOSYS.datafileToCsv(output, "resultado_final.csv", config, postProcessingLog)
+        self.postProcessing(output, processedOutput, config, saveLog)

@@ -6,7 +6,7 @@ import io
 import os
 optimized = False
 
-with open("data.zip", "rb") as file:
+with open("BC.zip", "rb") as file:
     button = st.download_button(
                     label="Baixar arquivo de exemplo",
                     data=file,
@@ -44,23 +44,25 @@ def unpack(data, temp_dir):
 
     return data[0]
 
-dataDir = None
-if data is not None:
-    dataDir = unpack(data, "data")
+dataPath = None
+if st.button("Descompactar"):    
+    if data is not None:
+        dataPath = unpack(data, "data")
+
+dataDir = "data/BC"
 
 if st.button("Otimizar"):
-    model = "model.txt"
-    processedModel = "processedModel.txt"
-    config = "configs/otoole_config.yaml"
-    # data = "data/BC"
-    combedData = "data.txt"
+    model = "assets\models\model.txt"
+    processedModel = "assets\models\processed\processedModel.txt"
+    config = "assets/configs/otoole_config.yaml"
+    combedData = "assets\data\combedData.txt"
     script = "preprocess.py"
-    processedData = "processedData.txt"
+    processedData = "assets\data\processedData.txt"
     output = "results/output.lp"
     processedOutput = "processedOutput.txt"
     optimizeLog = True
     if dataDir:
-        optimizer.optimize(dataDir+"/"+dataDir+"/"+"BC", model, config, combedData, processedData, script, output, processedOutput, optimizeLog)
+        optimizer.optimize(dataDir, model, config, combedData, processedData, script, output, processedModel, processedOutput, optimizeLog)
         optimized = True
     else:
         st.error("Nenhum arquivo selecionado")
@@ -72,4 +74,4 @@ if optimized:
                 data=file,
                 file_name="output.lp",
                 mime="df/lp"
-            ) ,  
+            )
